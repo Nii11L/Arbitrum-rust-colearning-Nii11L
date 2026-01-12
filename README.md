@@ -64,7 +64,7 @@
 
 程序成功查询地址 `0xd78677EFed3b87f8f421E68dA3F984ad8Ef76439` 的余额。
 
-![程序运行截图](level2-balance-query/img/task2程序成果运行截图.png)
+![程序运行截图](level2-balance-query/img/task2程序成功运行截图.png)
 
 **查询结果：**
 - 原始余额：99,999,564,586,000,000 wei
@@ -72,9 +72,140 @@
 
 ---
 
-## Task 3
-TODO
-## Task 4
-TODO
-## Task 5
-TODO
+## Task 3: Gas 费估算器 - Arbitrum Sepolia 测试网 Gas 费预估
+
+### 1. 环境准备
+- 创建新项目：`cargo new gas-fee-estimator`
+- 引入依赖：ethers-rs、tokio、dotenv
+
+### 2. 程序功能
+- 连接 Arbitrum Sepolia 测试网
+- 获取实时 Gas 价格
+- 计算 ETH 转账的 Gas 费用
+- 显示 Gas 价格、Gas 限制、预估费用
+
+### 3. Gas 费计算逻辑
+
+#### 核心公式
+```
+Gas Fee = Gas Price × Gas Limit
+```
+
+### 4. 核心代码实现
+
+#### Gas 价格查询 (`src/gas.rs:9-17`)
+
+#### Gas 费估算 (`src/gas.rs:28-50`)
+
+#### 标准 Gas 限制 (`src/gas.rs:60-64`)
+
+### 5. 运行结果
+
+程序成功获取 Arbitrum Sepolia 测试网的实时 Gas 价格并计算费用。
+
+![程序运行截图](task3/img/task3程序成功运行截图.png)
+
+**查询结果：**
+- Gas Price: 0.01 Gwei
+- Gas Limit: 21,000 units
+- Estimated Fee: 210 Gwei (0.00021 ETH)
+
+---
+
+## Task 4: ETH 转账 - Arbitrum Sepolia 测试网 ETH 转账
+
+### 1. 环境准备
+- 创建新项目：`cargo new eth-transfer`
+- 引入依赖：ethers-rs、tokio、dotenv
+- 配置 `.env` 文件（私钥、RPC URL）
+
+### 2. 程序功能
+- 地址校验（发送方和接收方）
+- 私钥安全处理（环境变量）
+- Gas 费自动估算（EIP-1559）
+- 交易签名与广播
+- 交易确认监控
+- 转账前后余额查询
+
+### 3. 交易详情
+
+| 参数 | 值 |
+|------|-----|
+| From | `0xd78677EFed3b87f8f421E68dA3F984ad8Ef76439` |
+| To | `0x7292dD72151DaCFBbE76305db1C8Ab1928E922E4` |
+| Amount | 0.0001 ETH |
+| Network | Arbitrum Sepolia (Chain ID: 421614) |
+
+### 4. 转账脚本代码
+
+#### 地址校验 (`src/transfer.rs:13-27`)
+
+#### Gas 费计算（EIP-1559）(`src/transfer.rs:124-148`)
+
+**公式**: `gas_price = base_fee + 20% of base_fee + 0.01 Gwei tip`
+
+#### ETH 转账执行 (`src/transfer.rs:91-162`)
+
+### 5. 运行结果
+
+程序成功执行 ETH 转账，并可在 Arbitrum Sepolia 区块浏览器查询交易。
+
+![程序运行截图](task4/eth-transfer/img/task4程序运行成功截图.png)
+
+**转账结果：**
+- 交易哈希: 0x5d3c235419c70fe9ea9be6a76a2a0acd69d0184913de3ba97cbf8a0dc4fd6061
+- 状态: Success ✓
+- Gas Used: 21,000
+- 转账金额: 0.0001 ETH
+
+![Arbiscan查询截图](task4/eth-transfer/img/Arbiscan查询交易详情截图.png)
+
+**验证方式：**
+可在 [Arbiscan Sepolia Explorer](https://sepolia.arbiscan.io/tx/0x5d3c235419c70fe9ea9be6a76a2a0acd69d0184913de3ba97cbf8a0dc4fd6061) 查询交易详情。
+
+---
+
+## Task 5: 合约交互 - ERC20 Token 合约查询
+
+### 1. 环境准备
+- 创建新项目：`cargo new contract-interaction`
+- 引入依赖：ethers-rs、tokio、dotenv、serde、serde_json
+- 准备 ERC20 ABI 文件
+
+### 2. 程序功能
+- 从 JSON 文件加载合约 ABI
+- 连接 Arbitrum Sepolia 上的 ERC20 合约
+- 查询代币信息（名称、符号、精度）
+- 查询总供应量
+- 查询指定地址的代币余额
+
+### 3. 合约详情
+
+| 参数 | 值 |
+|------|-----|
+| Contract Address | `0x812dD1c3EB07bb1F5f93540350EF9aF838AB0528` |
+| Token Name | Wrapped Ether |
+| Token Symbol | WETH |
+| Network | Arbitrum Sepolia (Chain ID: 421614) |
+| Explorer | [Arbiscan](https://sepolia.arbiscan.io/token/0x812dD1c3EB07bb1F5f93540350EF9aF838AB0528) |
+
+### 4. 合约交互代码
+
+#### ABI 加载 (`src/contract.rs:12-21`)
+
+#### 合约实例创建 (`src/contract.rs:44-67`)
+
+#### 只读合约调用 (`src/contract.rs:70-97`)
+
+### 5. 运行结果
+
+程序成功连接到 USDC 合约并查询代币信息。
+
+![程序运行截图](task5/contract-interaction/img/task5程序运行成功截图.png)
+
+**查询结果：**
+- Contract Address: 0x812dD1c3EB07bb1F5f93540350EF9aF838AB0528
+- Name: Circle USD
+- Symbol: USDC
+- Decimals: 18
+- Total Supply: 1001001100001.000000000000001002 USDC
